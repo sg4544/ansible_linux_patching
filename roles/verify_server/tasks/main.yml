@@ -1,0 +1,35 @@
+---
+- name: Verify Port 22 is Up
+  become: true
+  wait_for:
+    host: "{{ inventory_hostname }}"
+    port: 22
+    state: started
+    sleep: 5
+    timeout: 600
+  register: wait_result
+ 
+- name: Get Updated Facts
+  setup:
+ 
+- name: Get Updated Packages
+  shell: rpm -qa --last | grep "$(date +%a\ %d\ %b\ %Y\ %H)" |cut -f 1 -d " "
+  register: result
+  args:
+    warn: no
+ 
+- name: List Updated packages
+  debug:
+    msg:
+      - "List of Packages Updated:"
+      - "-------------------------"
+      - "{{ result.stdout_lines }}"
+ 
+- name: Display kernel version and Server Uptime
+  debug:
+    msg:
+      - "Hostname: {{ ansible_fqdn }}"
+      - "IPv4 Address: {{ ansible_default_ipv4.address }}"
+      - "Kernel Version: {{ ansible_kernel }}"
+      - "Distribution Version: {{ ansible_distribution_version }}"
+      - "Uptime: {{ now().replace(microsecond=0) - now().fromtimestamp(now(fmt='%s') | int - ansible_uptime_seconds) }}"

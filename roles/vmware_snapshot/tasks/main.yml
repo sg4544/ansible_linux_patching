@@ -1,0 +1,49 @@
+---
+ 
+- name: Perform Snapshot Operation
+  block:
+    - name: VCenter01 - Find Guest's Folder using name
+      vmware_guest_find:
+        hostname: "{{ VCenter01 }}"
+        username: "{{ VMware_username }}"
+        password: "{{ VMware_password }}"
+        validate_certs: no
+        name: "{{ inventory_hostname }}"
+      delegate_to: localhost
+      ignore_errors: yes
+      register: vm_folder_vcenter01
+      no_log: true
+ 
+    - name: VCenter01 - Creating New Snapshot
+      vmware_guest_snapshot:
+        name: "{{ inventory_hostname }}"
+        hostname: "{{ VCenter01 }}"
+        username: "{{ VMware_username }}"
+        password: "{{ VMware_password }}"
+        datacenter: "{{ vm_folder_folders[0].split('/')[1] }}"
+        folder: "{{ vm_folder_folders[0] }}"
+        validate_certs: no
+        state: present
+        memory_dump: yes
+        snapshot_name: "{{ inventory_hostname }}_linux_patching_{{ currenttime }}"
+        description: "{{ snap_description | default(omit) }}"
+      delegate_to: localhost
+      ignore_errors: yes
+      register: snap_vcenter01_result
+      no_log: true
+ 
+    - name: Check Snap completed on VCenter01
+      debug:
+        msg: "Snapshot Successfully Taken on VCenter01"
+      when: snap_vcenter01_result is succeeded
+ 
+    - name: Abort Playbook on host if Snapshot is Unsuccessful
+      meta: end_host
+      when:
+      - snap_vcenter01_result is not succeeded
+ 
+  rescue:
+    - name: Print Snapshot Error
+      debug:
+        msg: 'Error during snap operation. Please check logs.'
+ 

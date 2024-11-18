@@ -1,0 +1,19 @@
+---
+ 
+- name: Stop Apps
+  shell:
+    cmd: /etc/startstop/stopapps.sh
+  ignore_errors: yes
+  register: stopapps_result
+  become: true
+ 
+- name: Display Stop Apps Message
+  debug:
+    msg:
+      - "Stop Apps Log:"
+      - "---------------"
+      - "{{ stopapps_result.stdout_lines }}"
+        #- "{{ stopapps_result.stdout_lines[4] }}"
+        #- "{{ stopapps_result.stdout_lines[1-4] }}"
+        #- "{{ stopapps_result.stdout_lines }}"
+        #- "{{ stopapps_result.stdout|regex_search('Active') }}"

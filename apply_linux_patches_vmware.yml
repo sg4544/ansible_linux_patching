@@ -1,0 +1,21 @@
+---
+- name: Take Snapshot, Apply Patches and Reboot
+  hosts: test
+  gather_facts: no
+  environment:
+    PYTHONWARNINGS: ignore
+ 
+  vars_files:
+    - patch_variables.yml
+ 
+  roles:
+    - role: app_shutdown
+      tags: app_shutdown
+    - role: vmware_snapshot
+      tags: vmware_snapshot
+    - role: apply_patches
+      tags: apply_patches
+    - role: verify_server
+      tags: verify_server
+    - role: app_startup
+      tags: app_startup

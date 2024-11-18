@@ -1,0 +1,47 @@
+- name: Update ALL Packages
+  become: true
+  dnf:
+    name: '*'
+    update_cache: true
+    skip_broken: true
+    nobest: true
+    state: latest
+    exclude: "{{ excluded_pkgs | default(omit) }}"
+  when: patch_scope == "all"
+
+ 
+- name: Update Only Security Packages
+  become: true
+  dnf:
+    name: '*'
+    security: true
+    update_cache: true
+    skip_broken: true
+    state: latest
+    exclude: "{{ excluded_pkgs | default(omit) }}"
+  when: patch_scope == "security"
+ 
+- name: Update Only Bugfix Packages
+  become: true
+  dnf:
+    name: '*'
+    bugfix: true
+    update_cache: true
+    skip_broken: true
+    state: latest
+    exclude: "{{ excluded_pkgs | default(omit) }}"
+  when: patch_scope == "bugfix"
+ 
+- name: check if reboot needed
+  command: needs-restarting --reboothint
+  failed_when: needs_reboot.rc >= 2
+  changed_when: false
+  register: needs_reboot
+  become: true
+ 
+- name: reboot system
+  reboot:
+    reboot_timeout: "{{ patch_reboot_timeout }}"
+  when:
+    - patch_auto_reboot | bool and needs_reboot.rc == 1
+  become: true

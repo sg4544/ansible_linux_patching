@@ -1,0 +1,13 @@
+- name: Start Apps
+  shell:
+    cmd: /etc/startstop/startapps.sh
+  ignore_errors: yes
+  register: startapps_result
+  become: true
+ 
+- name: Display Start Apps Message
+  debug:
+    msg:
+    - "Start Apps Log:"
+    - "---------------"
+    - "{{ startapps_result.stdout_lines }}"
