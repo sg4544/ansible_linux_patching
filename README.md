@@ -18,6 +18,14 @@ Features
 
 06 - Start applications/DB on the VM
 
+07 - Run individual roles separately if needed, using tags:
+
+     - app_shutdown
+     - vmware_snapshot
+     - apply_patches
+     - verify_server
+     - app_startup
+
 
 Prerequisites:
 --------------
@@ -58,6 +66,7 @@ Prerequisites:
 
 04 - Run the playbook as below:
 
-     ansible-playbook -i inventory_file -k -K --check apply_linux_patches.yml    # Test Mode
-     ansible-playbook -i inventory_file -k -K apply_linux_patches.yml            # Apply Mode
+     ansible-playbook -i inventory_file -k -K --check apply_linux_patches.yml                          # Test Mode
+     ansible-playbook -i inventory_file -k -K apply_linux_patches.yml                                  # Apply Mode
+     ansible-playbook -i inventory_file -k -K apply_linux_patches.yml --tags "vmware_snapshot"         # Only run snapshot module
      
