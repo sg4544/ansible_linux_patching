@@ -1,10 +1,13 @@
 VCenter01: <vcenter fqdn>
 VMware_username: <vcenter username>
 VMware_password: <vcenter user password>
-patch_reboot_timeout: "30"                  # in seconds
+ansible_user: <ssh_username>
+ansible_password: <ssh_password>
+ansible_become_user: root
+patch_reboot_timeout: 30                    # in seconds
 patch_scope: all|security|bugfix            # choose one
 patch_auto_reboot: 1|0                      # choose one 
 excluded_pkgs:                              # specify list
-  - postgres-*
-  - mysql-*
-  - xyz-*
+- postgres-*
+- mysql-*
+- xyz-*
