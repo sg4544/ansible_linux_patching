@@ -15,8 +15,6 @@
 - name: Get Updated Packages
   shell: rpm -qa --last | grep "$(date +%a\ %d\ %b\ %Y\ %H)" |cut -f 1 -d " "
   register: result
-  args:
-    warn: no
  
 - name: List Updated packages
   debug:
