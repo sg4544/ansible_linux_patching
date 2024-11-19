@@ -27,6 +27,19 @@ Features
      - app_startup
 
 
+Security Features
+-----------------
+
+01 - Use of ansible vault to store usernames, fqdns and password (if required).
+
+02 - Use of no_log clause to avoid printing sensitive information in console log.
+
+03 - Ansible ssh access via use of private keys.
+
+04 - Use of privileged escalation on target nodes with minimal privilege user for ssh.
+
+
+
 Prerequisites:
 --------------
 
@@ -69,4 +82,5 @@ Prerequisites:
      ansible-playbook -i inventory_file -k -K --check --ask-vault-pass apply_linux_patches.yml                          # Test Mode
      ansible-playbook -i inventory_file -k -K --ask-vault-pass apply_linux_patches.yml                                  # Apply Mode
      ansible-playbook -i inventory_file -k -K --ask-vault-pass apply_linux_patches.yml --tags "vmware_snapshot"         # Only run snapshot module
+     
      
